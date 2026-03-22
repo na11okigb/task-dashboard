@@ -1,5 +1,3 @@
-import type { UserId } from "./UserId";
-
 type TaskStatus = "todo" | "in_progress" | "in_review" | "done" | "cancelled";
 type Priority = "low" | "medium" | "high" | "urgent";
 type UserRole = "admin" | "member" | "viewer";
@@ -28,7 +26,7 @@ type Project = {
   id: string;
   name: string;
   description: string | null;
-  color: string | null;
+  color: string;
   status: string;
   ownerId: string;
   createdAt: string;
@@ -49,7 +47,7 @@ type Task = {
   description: string | null;
   status: TaskStatus;
   priority: Priority;
-  assigneeId: string;
+  assigneeId: string | null;
   creatorId: string;
   dueDate: string | null;
   tags: string[] | null;
@@ -80,9 +78,21 @@ type Notification = {
   createdAt: string;
 };
 
+type CreateTaskInput = Omit<
+  Task,
+  "id" | "createdAt" | "updatedAt" | "creatorId" | "version" | "position"
+>;
+
+type UpdateTaskInput = Partial<CreateTaskInput>;
+
+type TaskCardProps = Pick<
+  Task,
+  "id" | "title" | "status" | "priority" | "assigneeId"
+>;
+
 type ApiResponse<T> = {
   data: T;
-  status: string;
+  status: number;
   message: string | null;
 };
 
@@ -91,8 +101,4 @@ type PaginatedResponse<T> = ApiResponse<T> & {
   hasMore: boolean;
 };
 
-type Result<T> = {
-  success: boolean;
-  data: T | undefined;
-  error: string | undefined;
-};
+type Result<T> = { success: true; data: T } | { success: false; error: string };
