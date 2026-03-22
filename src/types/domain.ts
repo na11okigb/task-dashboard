@@ -27,7 +27,7 @@ type Project = {
   name: string;
   description: string | null;
   color: string;
-  status: string;
+  status: ProjectStatus;
   ownerId: string;
   createdAt: string;
   updatedAt: string;
